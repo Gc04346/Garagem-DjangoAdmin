@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <style>
+    p {
+      text-align: justify;
+      text-justify: inter-word;
+    }
+    .text-right {
+      text-align: right;
+    }
+  </style>
+  </head>
+  <body>
+    {% for carro in obj %}
+      <h1 class="text-right">Nº Chassi: {{ carro.chassi }}</h1>
+      <p><b>Modelo:</b> {{ carro.modelo }}</p>
+      <p><b>Marca:</b> {{ carro.marca }}</p>
+      <p><b>Cor:</b> {{ carro.cor }}</p>
+      <p><b>Estado:</b> {{ carro.estado }}</p>
+      <p><b>Ar: </b> {{ carro.ar_condicionado }} </p>
+      <p><b>Vidro:</b> {{ carro.vidro_eletrico }}</p>
+      <p><b>Airbag:</b> {{ carro.airbag }}</p>
+      <p><b>Preco: R$</b> {{ carro.preco }}</p>
+      <p><b>Descricao:</b> {{ carro.descricao }}</p>
+      <br>
+      <hr>
+      <br>
+    {% endfor %}
+  </body>
+</html>

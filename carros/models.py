@@ -3,30 +3,28 @@ from django.db import models
 class Carro(models.Model):
     chassi = models.CharField(max_length=17, primary_key=True)
     MARCAS = (
-        ('FE', 'Ferrari'),
-        ('LG', 'Lamborghini'),
-        ('MC', 'Mercedes'),
-        ('CH', 'Chevrolet'),
-        ('TY', 'Toyota'),
-        ('HY', 'Hyundai'),
+        ('Ferrari', 'Ferrari'),
+        ('Lamborghini', 'Lamborghini'),
+        ('Mercedes', 'Mercedes'),
+        ('Chevrolet', 'Chevrolet'),
+        ('Toyota', 'Toyota'),
+        ('Hyundai', 'Hyundai'),
     )
     ESTADOS = (
-        ('ZK', 'ZeroKm'),
-        ('SN', 'Seminovo'),
-        ('US', 'Usado'),
+        ('ZeroKm', 'ZeroKm'),
+        ('Seminovo', 'Seminovo'),
+        ('Usado', 'Usado'),
     )
-    cor = models.CharField(max_length=20)
-    marca = models.CharField(max_length=2, choices=MARCAS, default='FE')
+    marca = models.CharField(max_length=15, choices=MARCAS, default='Hyundai')
     modelo = models.CharField(max_length=20)
-    estado = models.CharField(max_length=2, choices=ESTADOS, default='ZK')
+    ano = models.IntegerField(default=2000)
+    cor = models.CharField(max_length=20)
+    estado = models.CharField(max_length=10, choices=ESTADOS, default='ZeroKm')
     ar_condicionado = models.BooleanField()
     vidro_eletrico = models.BooleanField()
     airbag = models.BooleanField()
-    preco = models.DecimalField(max_digits = 9, decimal_places=2)
+    preco = models.FloatField(default=0.00)
     descricao = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return '{self.marca} {self.modelo}'.format(self=self)
-
-    def getCarro():
-        return self

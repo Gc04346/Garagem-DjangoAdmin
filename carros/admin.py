@@ -1,28 +1,40 @@
 from django.contrib import admin
 from .models import Carro
-import io
-from reportlab.pdfgen import canvas
-from django.http import FileResponse
+#imports para a geracao do PDF
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django_object_actions import DjangoObjectActions
 
+#Customizando o cabecalho da pagina no admin
 admin.site.site_header = 'Garagem'
 
-def muda_estado(modeladmin, request, carros):
-    carros.update(estado = 'ZK')
-muda_estado.short_description = "Tornar Zero Km"
-
+#Função que gera a ação de gerar o PDF com os carros selecionados
 def gerar_pdf(modeladmin, request, carros):
-    buffer = io.BytesIO()
-    pdf = canvas.Canvas(buffer)
-    for carro in carros:
-        pdf.drawString(100,100,carro.chassi)
-    pdf.showPage()
-    pdf.save()
-    return FileResponse(buffer, as_attachment=True, filename="carros.pdf")
+    html_string = render_to_string('carros/pdf_template.html', {'obj':carros})
+    html = HTML(string=html_string)
+    html.write_pdf(target='/tmp/carros.pdf');
+    fs = FileSystemStorage('/tmp')
+    with fs.open('carros.pdf') as pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="carros.pdf"'
+        return response
 
+    return response
 
-class CarroAdmin(admin.ModelAdmin):
-    list_filter = ['estado']
+gerar_pdf.short_description = 'Gerar PDF dos carros selecionados'
+
+#CarroAdmin permite que eu customize a página do Admin para adicionar filtros, search boxes, definir
+#o campo usado para ordenação dos resultados a exibir e as ações personalizadas (por exemplo, a de gerar o PDF)
+class CarroAdmin(DjangoObjectActions, admin.ModelAdmin):
+    #Permitir a filtragem por marca, estado, e existencia ou não de AC, VE, e airbag
+    list_filter = ['marca', 'estado','ar_condicionado','vidro_eletrico','airbag']
+    #Permitir a busca por chassi ou modelo
+    search_fields = ['chassi','modelo']
+    #Ordenar resultados por marca
     ordering = ['marca']
-    actions = [muda_estado,gerar_pdf]
+    #Insere ação de gerar o PDF
+    actions = [gerar_pdf]
 
 admin.site.register(Carro, CarroAdmin)
