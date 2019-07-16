@@ -1,5 +1,6 @@
-#Projeto Garagem - Django Admin
-### Pequeno projeto realizado com Django para customização do Django Admin
+# Projeto Garagem - Django Admin
+### Sobre o projeto
+Pequeno projeto realizado com Django 2.0.4 para customização do Django Admin. 
 Foi feita uma simulação de garagem com o banco de dados sqlite3, padrão do Django. Cada carro possui um chassi (primary key), marca, modelo, cor, ano, estado, e mais.
 
 ### Alterações feitas no Django Admin
